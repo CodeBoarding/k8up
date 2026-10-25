@@ -1,0 +1,82 @@
+{
+  "repository_name": ".codeboarding-target",
+  "timestamp": "2026-10-25T23:56:24.428598+00:00",
+  "overall_score": 0.9957446808510638,
+  "check_summaries": [
+    {
+      "check_name": "function_size",
+      "description": "Checks that functions/methods do not exceed line count thresholds",
+      "languages": [],
+      "check_type": "standard",
+      "total_entities_checked": 470,
+      "findings_count": 2,
+      "warning_count": 2,
+      "score": 0.9957446808510638,
+      "finding_groups": [
+        {
+          "severity": "warning",
+          "threshold": 150,
+          "description": "Functions exceeding 150.0 lines",
+          "entities": [
+            {
+              "entity_name": "operator.backupcontroller.executor.(*BackupExecutor).startBackup",
+              "file_path": "operator/backupcontroller/executor.go",
+              "line_start": 203,
+              "line_end": 383,
+              "metric_value": 180
+            },
+            {
+              "entity_name": "cmd.cli.main.RunRestore",
+              "file_path": "cmd/cli/main.go",
+              "line_start": 222,
+              "line_end": 377,
+              "metric_value": 155
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "check_name": "circular_dependencies",
+      "description": "Detects circular dependencies between packages",
+      "languages": [],
+      "check_type": "circular_dependencies",
+      "cycles": [
+        "restic.stats -> restic.cli -> restic.stats",
+        "operator.prunecontroller -> operator.reconciler -> operator.prunecontroller",
+        "operator.restorecontroller -> operator.reconciler -> operator.restorecontroller",
+        "operator.reconciler -> operator.archivecontroller -> operator.reconciler",
+        "operator.reconciler -> operator.backupcontroller -> operator.reconciler",
+        "operator.reconciler -> operator.checkcontroller -> operator.reconciler",
+        "operator.reconciler -> operator.schedulecontroller -> operator.reconciler"
+      ],
+      "packages_checked": 33,
+      "packages_in_cycles": 9
+    },
+    {
+      "check_name": "unused_code_diagnostics",
+      "description": "Detects unused imports, variables, functions, and dead code via LSP diagnostics",
+      "languages": [],
+      "check_type": "standard",
+      "total_entities_checked": 0,
+      "findings_count": 0,
+      "warning_count": 0,
+      "score": 1.0,
+      "finding_groups": []
+    }
+  ],
+  "file_summaries": [
+    {
+      "file_path": "operator/backupcontroller/executor.go",
+      "total_findings": 1,
+      "warning_findings": 1,
+      "composite_risk_score": 15.0
+    },
+    {
+      "file_path": "cmd/cli/main.go",
+      "total_findings": 1,
+      "warning_findings": 1,
+      "composite_risk_score": 15.0
+    }
+  ]
+}

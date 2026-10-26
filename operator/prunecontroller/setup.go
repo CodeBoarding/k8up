@@ -16,8 +16,7 @@ import (
 func SetupWithManager(mgr ctrl.Manager) error {
 	name := "prune.k8up.io"
 	r := reconciler.NewReconciler[*k8upv1.Prune, *k8upv1.PruneList](mgr.GetClient(), &PruneReconciler{
-		Kube:       mgr.GetClient(),
-		KubeReader: mgr.GetAPIReader(),
+		Kube: mgr.GetClient(),
 	})
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&k8upv1.Prune{}).

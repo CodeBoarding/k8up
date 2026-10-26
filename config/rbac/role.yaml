@@ -23,14 +23,6 @@ rules:
   - watch
 - apiGroups:
   - ""
-  resourceNames:
-  - k8up-repo
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
-  - ""
   resources:
   - serviceaccounts
   verbs:

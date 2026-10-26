@@ -16,8 +16,7 @@ import (
 func SetupWithManager(mgr controllerruntime.Manager) error {
 	name := "archive.k8up.io"
 	r := reconciler.NewReconciler[*k8upv1.Archive, *k8upv1.ArchiveList](mgr.GetClient(), &ArchiveReconciler{
-		Kube:       mgr.GetClient(),
-		KubeReader: mgr.GetAPIReader(),
+		Kube: mgr.GetClient(),
 	})
 	return controllerruntime.NewControllerManagedBy(mgr).
 		For(&k8upv1.Archive{}).

@@ -83,7 +83,6 @@ type Configuration struct {
 	PromURL                          string
 	ClusterName                      string
 	RestartPolicy                    string
-	RepositorySecretName             string
 	SkipWithoutAnnotation            bool
 	SkipSnapshotSync                 bool
 	EnableRelaxedScheduling          bool

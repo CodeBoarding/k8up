@@ -19,8 +19,6 @@ import (
 // BackupReconciler reconciles a Backup object
 type BackupReconciler struct {
 	Kube client.Client
-	// KubeReader performs direct API reads so Secrets only require named GET permissions, not cache list/watch permissions.
-	KubeReader client.Reader
 }
 
 func (r *BackupReconciler) NewObject() *k8upv1.Backup {
@@ -33,12 +31,6 @@ func (r *BackupReconciler) NewObjectList() *k8upv1.BackupList {
 
 func (r *BackupReconciler) Provision(ctx context.Context, obj *k8upv1.Backup) (reconcile.Result, error) {
 	log := controllerruntime.LoggerFrom(ctx)
-
-	if obj.Spec.Backend != nil {
-		if err := obj.Spec.Backend.ResolveSecretRefs(ctx, r.KubeReader, obj.GetNamespace(), cfg.Config.RepositorySecretName); err != nil {
-			return reconcile.Result{}, fmt.Errorf("resolve backend Secret references: %w", err)
-		}
-	}
 
 	repository := cfg.Config.GetGlobalRepository()
 	if obj.Spec.Backend != nil {

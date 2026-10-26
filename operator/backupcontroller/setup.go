@@ -25,8 +25,7 @@ import (
 func SetupWithManager(mgr controllerruntime.Manager) error {
 	name := "backup.k8up.io"
 	r := reconciler.NewReconciler[*k8upv1.Backup, *k8upv1.BackupList](mgr.GetClient(), &BackupReconciler{
-		Kube:       mgr.GetClient(),
-		KubeReader: mgr.GetAPIReader(),
+		Kube: mgr.GetClient(),
 	})
 	return controllerruntime.NewControllerManagedBy(mgr).
 		Named(name).

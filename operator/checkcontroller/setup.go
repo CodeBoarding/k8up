@@ -16,8 +16,7 @@ import (
 func SetupWithManager(mgr ctrl.Manager) error {
 	name := "check.k8up.io"
 	r := reconciler.NewReconciler[*k8upv1.Check, *k8upv1.CheckList](mgr.GetClient(), &CheckReconciler{
-		Kube:       mgr.GetClient(),
-		KubeReader: mgr.GetAPIReader(),
+		Kube: mgr.GetClient(),
 	})
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&k8upv1.Check{}).

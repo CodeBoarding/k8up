@@ -885,6 +885,13 @@ spec:
                       More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                     type: object
                 type: object
+              skipOnFailedCheck:
+                description: |-
+                  SkipOnFailedCheck skips the backup when the last finished Check of its repository failed,
+                  instead of writing more data into a repository that restic reported as damaged.
+                  The Backup then completes with reason RepositoryUnhealthy and no backup Job is started.
+                  The operator flag --global-skip-backup-on-failed-check enables this for all Backups.
+                type: boolean
               statsURL:
                 description: |-
                   StatsURL sets an arbitrary URL where the restic container posts metrics and

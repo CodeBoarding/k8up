@@ -47,3 +47,18 @@ type SnapshotList struct {
 func init() {
 	SchemeBuilder.Register(&Snapshot{}, &SnapshotList{})
 }
+
+// Latest returns the Snapshot that was taken most recently, or nil if the list has no Snapshot with a date.
+func (s *SnapshotList) Latest() *Snapshot {
+	var latest *Snapshot
+	for i := range s.Items {
+		date := s.Items[i].Spec.Date
+		if date == nil {
+			continue
+		}
+		if latest == nil || date.After(latest.Spec.Date.Time) {
+			latest = &s.Items[i]
+		}
+	}
+	return latest
+}

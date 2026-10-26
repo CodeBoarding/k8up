@@ -38,6 +38,16 @@ var (
 		Name: "k8up_schedule_last_job_succeeded",
 		Help: "1 if the most recent job triggered by this schedule succeeded, 0 if it failed.",
 	}, []string{"namespace", "schedule", "jobType"})
+
+	backupRepositoryHealthy = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "k8up_backup_repository_healthy",
+		Help: "1 if the last finished check of the repository a backup writes to succeeded, 0 if it failed.",
+	}, []string{"namespace"})
+
+	backupsSkippedCounter = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "k8up_backups_skipped_unhealthy_repository_total",
+		Help: "The total number of backups skipped because the last check of their repository failed",
+	}, []string{"namespace"})
 )
 
 func CreateLabels(namespace string, jobType v1.JobType) {
@@ -74,6 +84,20 @@ func SetScheduleLastJobStatus(namespace, scheduleName string, jobType v1.JobType
 	scheduleLastJobSucceeded.WithLabelValues(namespace, scheduleName, jobType.String()).Set(val)
 }
 
+// SetBackupRepositoryHealthy records whether the last finished check of a backup's repository succeeded (1) or failed (0).
+func SetBackupRepositoryHealthy(namespace string, healthy bool) {
+	val := 0.0
+	if healthy {
+		val = 1.0
+	}
+	backupRepositoryHealthy.WithLabelValues(namespace).Set(val)
+}
+
+// IncBackupsSkippedCounter counts a backup that was skipped because its repository is unhealthy.
+func IncBackupsSkippedCounter(namespace string) {
+	backupsSkippedCounter.WithLabelValues(namespace).Inc()
+}
+
 func init() {
 	// Register custom metrics with the global prometheus registry
 	metrics.Registry.MustRegister(
@@ -82,5 +106,7 @@ func init() {
 		metricsTotalCounter,
 		scheduleGauge,
 		scheduleLastJobSucceeded,
+		backupRepositoryHealthy,
+		backupsSkippedCounter,
 	)
 }

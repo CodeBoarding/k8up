@@ -49,6 +49,13 @@ type BackupSpec struct {
 	// When defined, only PVCs and PreBackupPods matching them are backed up.
 	// +optional
 	LabelSelectors []metav1.LabelSelector `json:"labelSelectors,omitempty"`
+
+	// SkipOnFailedCheck skips the backup when the last finished Check of its repository failed,
+	// instead of writing more data into a repository that restic reported as damaged.
+	// The Backup then completes with reason RepositoryUnhealthy and no backup Job is started.
+	// The operator flag --global-skip-backup-on-failed-check enables this for all Backups.
+	// +optional
+	SkipOnFailedCheck bool `json:"skipOnFailedCheck,omitempty"`
 }
 
 type BackupTemplate struct {

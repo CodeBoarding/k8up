@@ -47,6 +47,8 @@ const (
 	ConditionProgressing ConditionType = "Progressing"
 	// ConditionPreBackupPodReady is True if Deployments for all Container definitions were created and are ready
 	ConditionPreBackupPodReady ConditionType = "PreBackupPodReady"
+	// ConditionRepositoryHealthy reflects the result of the last finished Check against the repository a Backup writes to.
+	ConditionRepositoryHealthy ConditionType = "RepositoryHealthy"
 
 	// ReasonReady indicates the condition is ready for work
 	ReasonReady ConditionReason = "Ready"
@@ -71,6 +73,15 @@ const (
 	ReasonNoPreBackupPodsFound ConditionReason = "NoPreBackupPodsFound"
 	// ReasonWaiting is given when PreBackupPods are waiting to be started
 	ReasonWaiting ConditionReason = "Waiting"
+
+	// ReasonLastCheckSucceeded is given when the last finished Check of the repository succeeded
+	ReasonLastCheckSucceeded ConditionReason = "LastCheckSucceeded"
+	// ReasonLastCheckFailed is given when the last finished Check of the repository failed
+	ReasonLastCheckFailed ConditionReason = "LastCheckFailed"
+	// ReasonNoCheckFound is given when no Check of the repository has finished yet
+	ReasonNoCheckFound ConditionReason = "NoCheckFound"
+	// ReasonRepositoryUnhealthy is given when a Backup was skipped because the last Check of its repository failed
+	ReasonRepositoryUnhealthy ConditionReason = "RepositoryUnhealthy"
 
 	// LabelK8upType is the label key that identifies the job type
 	LabelK8upType = "k8up.io/type"

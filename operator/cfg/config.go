@@ -86,6 +86,7 @@ type Configuration struct {
 	RepositorySecretName             string
 	SkipWithoutAnnotation            bool
 	SkipSnapshotSync                 bool
+	SkipBackupOnFailedCheck          bool
 	EnableRelaxedScheduling          bool
 	InsecureAllowPodExecSPDYFallback bool
 

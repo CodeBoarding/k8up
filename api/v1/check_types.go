@@ -5,6 +5,7 @@ import (
 	"reflect"
 
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -126,6 +127,39 @@ func (c *CheckList) GetJobObjects() JobObjectList {
 		items[i] = &c.Items[i]
 	}
 	return items
+}
+
+// RepositoryOrDefault returns the restic repository this Check runs against.
+// A Check without a backend runs against the operator's global repository, given as defaultRepository.
+func (c *Check) RepositoryOrDefault(defaultRepository string) string {
+	if c.Spec.Backend == nil {
+		return defaultRepository
+	}
+	return c.Spec.Backend.String()
+}
+
+// FinishedAt returns when the Check completed, successfully or not, or nil if it has not finished yet.
+func (c *Check) FinishedAt() *metav1.Time {
+	if !c.Status.HasFinished() {
+		return nil
+	}
+	completedCond := meta.FindStatusCondition(c.Status.Conditions, ConditionCompleted.String())
+	return &completedCond.LastTransitionTime
+}
+
+// LatestFinished returns the Check that finished most recently, or nil if none of them has finished.
+func (c *CheckList) LatestFinished() *Check {
+	var latest *Check
+	for i := range c.Items {
+		finishedAt := c.Items[i].FinishedAt()
+		if finishedAt == nil {
+			continue
+		}
+		if latest == nil || finishedAt.After(latest.FinishedAt().Time) {
+			latest = &c.Items[i]
+		}
+	}
+	return latest
 }
 
 // GetDeepCopy returns a deep copy

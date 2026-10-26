@@ -90,4 +90,18 @@ Each condition also contains a human-readable message that describes the status 
 | Finished
 | `PreBackupPod` deployments cleaned up after backup finished.
 
+.3+| `RepositoryHealthy`
+| LastCheckSucceeded
+| The last finished `Check` of the repository succeeded.
+
+| LastCheckFailed
+| The last finished `Check` of the repository failed.
+
+| NoCheckFound
+| No `Check` of the repository has finished yet.
+
+| `Completed`
+| RepositoryUnhealthy
+| The backup was skipped because the last `Check` of its repository failed and `skipOnFailedCheck` is set.
+
 |===

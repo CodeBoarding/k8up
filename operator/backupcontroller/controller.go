@@ -71,6 +71,15 @@ func (r *BackupReconciler) Provision(ctx context.Context, obj *k8upv1.Backup) (r
 		return controllerruntime.Result{RequeueAfter: time.Second * 30}, nil
 	}
 
+	skip, err := r.gateOnRepositoryHealth(ctx, obj, repository)
+	if err != nil {
+		return controllerruntime.Result{}, err
+	}
+	if skip {
+		log.Info("Skipping backup because the last check of its repository failed")
+		return controllerruntime.Result{}, nil
+	}
+
 	lock := locker.GetForRepository(r.Kube, repository)
 	didRun, err := lock.TryRun(ctx, config, executor.GetConcurrencyLimit(), executor.Execute)
 	if !didRun && err == nil {

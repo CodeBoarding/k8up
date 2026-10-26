@@ -40,6 +40,16 @@ metrics:
 | Gauge
 | `namespace`
 | Number of active schedules managed by the operator
+
+| `k8up_backup_repository_healthy`
+| Gauge
+| `namespace`
+| 1 if the last finished check of the repository a backup writes to succeeded, 0 if it failed
+
+| `k8up_backups_skipped_unhealthy_repository_total`
+| Counter
+| `namespace`
+| Total number of backups skipped because the last check of their repository failed
 |===
 
 The `jobType` label can be one of: `backup`, `check`, `archive`, `restore`, `prune`.

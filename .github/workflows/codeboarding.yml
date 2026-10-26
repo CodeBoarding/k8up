@@ -9,6 +9,15 @@ on:
   # trigger: a dispatch could run sync on any branch.
   push:
     branches: ['master']
+    # Loop guard: sync commits these to master. Generated files only, so an edit to
+    # the user-authored configuration under .codeboarding/ still triggers a sync.
+    paths-ignore:
+      - '.codeboarding/analysis.json'
+      - '.codeboarding/fingerprint.json'
+      - '.codeboarding/static_analysis.pkl'
+      - '.codeboarding/static_analysis.sha'
+      - '.codeboarding/codeboarding_version.json'
+      - '.codeboarding/health/health_report.json'
 
 # No workflow-level permissions: each job requests only what it needs (least
 # privilege), so the default token starts with none.
@@ -38,6 +47,7 @@ jobs:
     steps:
       - uses: CodeBoarding/CodeBoarding-action@v1
         with:
+          codeboarding_analysis_location: in_place
           # CodeBoarding's free hosted tier. No secret to add: the run authenticates
           # with the GitHub OIDC token that `id-token: write` above grants.
           llm: hosted
@@ -47,11 +57,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
-      contents: write       # push the generated analysis to codeboarding/baseline
+      contents: write       # commit the generated analysis to master
       actions: read         # continue from an analysis an earlier run published
       id-token: write       # identifies this repo to CodeBoarding's hosted tier
     steps:
       - uses: CodeBoarding/CodeBoarding-action@v1
         with:
           mode: sync
+          codeboarding_analysis_location: in_place
+          # CodeBoarding's free hosted tier. No secret to add: the run authenticates
+          # with the GitHub OIDC token that `id-token: write` above grants.
           llm: hosted
